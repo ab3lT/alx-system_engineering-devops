@@ -1,2 +1,2 @@
-#!bain/bash
+#!/bain/bash
 ls
