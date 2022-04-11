@@ -3,12 +3,12 @@
 """
 
 import requests
-from sys import argv
+import sys
 
 if __name__ == '__main__':
     endpoint = "https://jsonplaceholder.typicode.com"
-    id = argv[2]
-    userId = 2
+    id = sys.argv[2]
+    userId = sys.argv[1]
     user = requests.get(endpoint + "users/{}".
                         format(userId), verify=False).json()
     name = user.json().get('name')
