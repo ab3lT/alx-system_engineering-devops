@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-"""gathers data from an API"""
+"""getting data from an api
+"""
 
+import requests
+from sys import argv
 
-if __name__ == "__main__":
-    import requests
-    import sys
-
-    user_req = requests.get("https://jsonplaceholder.typicode.com/users/{}".
-                            format(sys.argv[1]))
-    user_name = user_req.json().get("name")
-    tasks_req = requests.get("https://jsonplaceholder.typicode.com/todos")
-    total_tasks = 0
-    cmp_tasks = 0
-    cmp_tasks_desc = ""
-    for each in tasks_req.json():
-        if each["userId"] == int(sys.argv[1]):
-            total_tasks += 1
-            if each["completed"] is True:
-                cmp_tasks += 1
-                cmp_tasks_desc += "\t {}\n".format(each["title"])
+if __name__ == '__main__':
+    endpoint = "https://jsonplaceholder.typicode.com"
+    userId = argv[1]
+    user = requests.get(endpoint + "users/{}".
+                        format(userId), verify=False).json()
+    todo = requests.get(endpoint + "todos?userId={}".
+                        format(userId), verify=False).json()
+    completed_tasks = []
+    for task in todo:
+        if task.get('completed') is True:
+            completed_tasks.append(task.get('title'))
     print("Employee {} is done with tasks({}/{}):".
-          format(user_name, cmp_tasks, total_tasks))
-    print(cmp_tasks_desc, end="")
-     
+          format(user.get('name'), len(completed_tasks), len(todo)))
+    print("\n".join("\t {}".format(task) for task in completed_tasks))
